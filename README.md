@@ -1,37 +1,26 @@
-## Welcome to GitHub Pages
+# NAG - Network for Adversary Generation [CVPR 2018](http://val.serc.iisc.ernet.in/nag/) WIP
+Pytorch implementation of NAG : Network for adversary generation 
 
-You can use the [editor on GitHub](https://github.com/Gokkulnath/nag_pytorch/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+Konda Reddy Mopuri*, Utkarsh Ojha*, Utsav Garg, R. Venkatesh Babu.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+This work is an attempt to explore the manifold of perturbations that can cause CNN based classifiers to behave absurdly. At present, this repository provides the facility to train the generator that can produce perturbations to fool VGG F, VGG 16, VGG 19, GoogleNet, CaffeNet, ResNet 50, ResNet 152. The generator architecture has been modified from here.
 
-### Markdown
+Architecture
+![](resources/nag.png)
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
-```markdown
-Syntax highlighted code block
+## Training your own generator
 
-# Header 1
-## Header 2
-### Header 3
 
-- Bulleted
-- List
+## Testing on clean images
 
-1. Numbered
-2. List
 
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+## Reference
 ```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Gokkulnath/nag_pytorch/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+@inproceedings{nag-cvpr-2018,
+  title={NAG: Network for Adversary Generation},
+  author={Mopuri, Konda Reddy and Ojha, Utkarsh and Garg, Utsav and Babu, R Venkatesh},
+ booktitle = {Proceedings of the IEEE Computer Vision and Pattern Recognition ({CVPR})},
+ year = {2018}
+}
+```
