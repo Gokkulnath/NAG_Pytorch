@@ -1,4 +1,4 @@
-# **Pytorch implementation** NAG - Network for Adversary Generation [CVPR 2018](http://val.serc.iisc.ernet.in/nag/)
+# **Pytorch implementation** NAG - Network for Adversary Generation [Link](http://val.serc.iisc.ernet.in/nag/)
 
 Authors: Konda Reddy Mopuri*, Utkarsh Ojha*, Utsav Garg, R. Venkatesh Babu.
 
