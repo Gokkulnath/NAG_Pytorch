@@ -30,7 +30,7 @@ For Windows Users:
   - [Archive Link](https://archive.org/embed/Imagenet_NAG)
 - Option 2 : Mega Download Link for Train abd Validation data of Imagenet 2012 (Obtained from Kaggle)
   - Validation Data: [Mega Link](https://mega.nz/#!yDoTDIyD!RjN6OBA92-KLpNqDeLS3OzwmAYesEbTsiQat9hT6p6s)
-  - Trainning Data: [Mega Link](https://mega.nz/#!vKY0WSDa!4aibnBkiXUrO9MkhQlLGXac7wLF5HY7O4LzfdFEaeQU) 
+  - Training Data: [Mega Link](https://mega.nz/#!vKY0WSDa!4aibnBkiXUrO9MkhQlLGXac7wLF5HY7O4LzfdFEaeQU) 
 
 
 - The Notebook Code.ipynb contains the code required for trainning the generator
@@ -38,10 +38,9 @@ For Windows Users:
 
 - Note: Pretrained weights for Googlenet, Resnet50, VGG16 and VGG19 (Trained for 30 Epochs) can be found   as a Kaggle Dataset
 Link : https://www.kaggle.com/gokkulnath/nag-pytorch-pretrained
-##### TODO : 
 
+#### TODO : 
 - Testing on clean images
-
 
 ## Reference
 ```
