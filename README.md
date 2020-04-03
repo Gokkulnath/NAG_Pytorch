@@ -1,5 +1,6 @@
-# **Pytorch implementation** NAG - Network for Adversary Generation [Link](http://val.serc.iisc.ernet.in/nag/)
+# **Pytorch implementation** NAG - Network for Adversary Generation 
 
+Official Project Page: [Link](http://val.serc.iisc.ernet.in/nag/)
 Authors: Konda Reddy Mopuri*, Utkarsh Ojha*, Utsav Garg, R. Venkatesh Babu.
 
 This work is an attempt to explore the manifold of perturbations that can cause CNN based classifiers to behave absurdly. At present, this repository provides the facility to train the generator that can produce perturbations to fool VGG F, VGG 16, VGG 19, GoogleNet, CaffeNet, ResNet 50, ResNet 152. The generator architecture has been modified from here.
