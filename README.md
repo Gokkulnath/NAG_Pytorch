@@ -39,6 +39,15 @@ For Windows Users:
 - Note: Pretrained weights for Googlenet, Resnet50, VGG16 and VGG19 (Trained for 30 Epochs) can be found   as a Kaggle Dataset
 Link : https://www.kaggle.com/gokkulnath/nag-pytorch-pretrained
 
+## Interpolating Latent Dimension for NAG :  
+
+[![Interpolating Latent Dimension for NAG](https://img.youtube.com/vi/2lojORAu8vA/0.jpg)](https://www.youtube.com/watch?v=2lojORAu8vA&feature=youtu.be)
+
+## Sample Generated Perturbations:
+
+![](resources/Collage_perturbation.v1.png)
+
+
 #### TODO : 
 - Testing on clean images
 
