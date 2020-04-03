@@ -6,8 +6,15 @@ Authors: Konda Reddy Mopuri*, Utkarsh Ojha*, Utsav Garg, R. Venkatesh Babu.
 
 This work is an attempt to explore the manifold of perturbations that can cause CNN based classifiers to behave absurdly. At present, this repository provides the facility to train the generator that can produce perturbations to fool VGG F, VGG 16, VGG 19, GoogleNet, CaffeNet, ResNet 50, ResNet 152. The generator architecture has been modified from here.
 
-Architecture
+## Proposed Approach
 ![](resources/nag.png)
+
+The core idea is to model the distribution of adversarial perturbations using a Generative approach, where in the discriminator used is a pretrained model, In this approach the Only genertors is getting updated. To Quantify the effectiveness of perturbations generated the authors have formulated two objectives.
+1. Fooling Objective :  Ideally a perturbation should confuse the  classifier so as to flip the benign prediction into a different adversarial prediction. In order to improve the efficacy of the perturbations, the author's use the confidence of the benign(Unperturbed/clean) prediction which should be reduced and that of another category should be made higher. 
+
+2. Diversity Objective: 
+The idea is to encourage the generator to explore the space of perturbations and generate a diverse set of perturbations.  This is done By increasing the distance between feature embeddings projected by the target classifier.
+
 
 ## Setting up Data Manually
 **P.S**: For the train split we randomly sampled 10 instances from each target class as described in the paper.
