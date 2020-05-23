@@ -49,7 +49,13 @@ Link : https://www.kaggle.com/gokkulnath/nag-pytorch-pretrained
 
 
 #### TODO : 
-- Testing on clean images
+- [x] Add Additional Loss with Distance on Features  ? Required?
+- [x] Fit, evaluate, predict ? , generate_perturbation
+	- [ ] Function to Plot Fooling of a image across multiple classifiers
+	- [x]  Read the paper and Documentation
+	- [x] Push to Cloud and save the model/host it
+- [x] Proof read the NAG Notebook and blog post
+- [ ] Testing on clean images
 
 ## Reference
 ```
