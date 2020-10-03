@@ -11,4 +11,7 @@ unzip -q valid.zip
 
 python Verify_Dataset.py
 
+# To Get the VGG-F model weights either dowload from URL : 
+pip install gdown --user
+gdown https://drive.google.com/file/d/1TjaaUAex89NUOBihFxvrBFuHRfv8Jd5Y/view?usp=sharing
 rm train.zip valid.zip
