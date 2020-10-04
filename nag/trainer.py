@@ -1,28 +1,34 @@
 from tqdm import tqdm
+import torch
+import torch.nn.functional as F
+import string,datetime,random
+from nag.utils import get_device,get_preds,validate_generator
+from nag.loss import fooling_objective,diversity_objective
 
 
-
-def fit(nb_epochs,D_model,dls,optimizer,adversarygen=adversarygen):
+def fit(nb_epochs,D_model,dls,optimizer,G_adversary,device=get_device(),use_wandb=False):
     # Set the Discriminator in Eval mode; Weights are fixed.
     train_dl,val_dl = dls
+    bs = train_dl.batch_size
+    train_num =  len(train_dl.dataset)
     D_model=D_model.to(device)
     D_model.eval()
     timestamp=datetime.datetime.now().strftime("%d%b%Y_%H_%M")
-    train_log = open(f'train_log_{arch}_{timestamp}.txt','w')
+    train_log = open(f'train_log_{D_model.__class__}_{timestamp}.txt','w')
     for epoch in tqdm(range(nb_epochs),total=nb_epochs):
         running_loss=0
         rand_str= ''.join( random.choice(string.ascii_letters) for i in range(6))
         
         train_log.writelines(f"############### TRAIN PHASE STARTED : {epoch}################")
-        for batch_idx, data in tqdm(enumerate(train_dl),total = train_num//train_dl.batch_size):
+        for batch_idx, data in tqdm(enumerate(train_dl),total =  train_num//bs):
             # Move Data and Labels to device(GPU)
             images = data[0].to(device)
             labels = data[1].to(device)
 
             
             # Generate the Adversarial Noise from Uniform Distribution U[-1,1]
-            latent_seed = 2 * torch.rand(bs, nz, 1, 1, device=device,requires_grad=True) -1 # (r1 - r2) * torch.rand(a, b) + r2
-            noise = adversarygen(latent_seed)
+            latent_seed = 2 * torch.rand(bs, G_adversary.nz, 1, 1, device=device,requires_grad=True) -1 # (r1 - r2) * torch.rand(a, b) + r2
+            noise = G_adversary(latent_seed)
             optimizer.zero_grad()
 
             # XB = images
@@ -56,7 +62,8 @@ def fit(nb_epochs,D_model,dls,optimizer,adversarygen=adversarygen):
 #             for perturb_idx,perturbation in enumerate(perturbations[:,]):
 #                 im = Image.fromarray(perturbation.astype(np.uint8))
 #                 wandb.log({"noise": [wandb.Image(im, caption=f"Noise_{arch}_{epoch}_{perturb_idx}")]})
-            wandb.log({"fool_obj": fool_obj.item(),
+            if use_wandb:
+                wandb.log({"fool_obj": fool_obj.item(),
                        "divesity_obj": divesity_obj.item(),
                        "total_loss":total_loss.item(),
                       })        
@@ -73,8 +80,8 @@ def fit(nb_epochs,D_model,dls,optimizer,adversarygen=adversarygen):
         train_log.writelines(f"Loss after Epoch No: {epoch +1} is {running_loss/(train_num//train_dl.batch_size)}")
         # to_save can be any expression/condition that returns a bool
         
-        save_checkpoint(adversarygen, to_save= True, filename=f'GeneratorW_{arch}_{epoch}_{rand_str}.pth') 
+        save_checkpoint(G_adversary, to_save= True, filename=f'GeneratorW_{arch}_{epoch}_{rand_str}.pth') 
         if epoch % 1 == 0:
 #             save_perturbations(noise,arch,epoch)
-            save_perturbations(noise,arch,epoch,wabdb_flag=True)
+            save_perturbations(noise,arch,epoch,wabdb_flag=use_wandb)
     train_log.close()

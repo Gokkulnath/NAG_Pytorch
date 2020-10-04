@@ -1,4 +1,5 @@
 import torch
+import torch.nn.functional as F
 import os
 from PIL import Image
 import numpy as np
@@ -7,6 +8,8 @@ try:
     import wandb
 except:
     warnings.warn('Check wandb is installed. Logging Functions may not Work. If not install using the command pip install wandb. ')
+from nag.model import model_dict
+from tqdm import tqdm 
 # epsillon=10
 # batch_size=32
 # latent_dim = 10
@@ -14,6 +17,9 @@ img_h,img_w,img_c=(224,224,3)
 latent_dim=10
 arch='resnet50'
 archs=model_dict.keys() # ['vgg-f','vgg16','vgg19','googlenet','resnet50','resnet152'] 
+
+def get_device():
+    return torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def get_bs(arch):
     if torch.cuda.is_available():
@@ -23,16 +29,16 @@ def get_bs(arch):
 #         print(f"Current GPU MAX Size : {GPU_MAX_MEM}. {BS_DIV}")
 
         if arch  not in ['resnet50','resnet152']:#  ['vgg16','vgg19','vgg-f','googlenet']:
-            bs=int(64)
-        elif arch in ['resnet50','resnet152']:
             bs=int(32)
+        elif arch in ['resnet50','resnet152']:
+            bs=int(16)
         else:
             raise ValueError(f'Architecture type not supported. Please choose one from the following {archs}')
     else:
         bs=8 # OOM Error
     return bs
 
-get_bs(arch)
+#get_bs(arch)
 
 
 def save_checkpoint(model, to_save, filename='checkpoint.pth'):
@@ -114,9 +120,9 @@ def validate_generator_old(noise,val_dl,val_iterations=10):
 
     
     
-def validate_generator(noise,D_model,val_dl):
+def validate_generator(noise,D_model,val_dl,device=get_device()):
     total_fool=0
-    for batch_idx, data in tqdm(enumerate(val_dl),total = val_num//val_dl.batch_size):
+    for batch_idx, data in tqdm(enumerate(val_dl),total = len(val_dl.dataset)//val_dl.batch_size):
         val_images = data[0].to(device)
         val_labels = data[1].to(device)
 
@@ -125,9 +131,8 @@ def validate_generator(noise,D_model,val_dl):
         nfool, _ = compute_fooling_rate(adv_idx,clean_idx)
         total_fool += nfool
 
-    fool_rate = 100*float(total_fool)/(val_num)
+    fool_rate = 100*float(total_fool)/(len(val_dl.dataset))
     return fool_rate,total_fool
 
 
-def get_device():
-    return torch.device("cuda" if (torch.cuda.is_available() and ngpu > 0) else "cpu")
+

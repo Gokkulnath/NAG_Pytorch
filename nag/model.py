@@ -12,16 +12,12 @@ model_dict ={
 }
 
 
-ngf=128
-nz= latent_dim=10
-e_lim = 10
-nc=3 # Number of Channels
-
 # Fixed Architecture: Weights will be updated by Backprop.
 class AdveraryGenerator(nn.Module):
-    def __init__(self,e_lim):
+    def __init__(self,nz,e_lim):
         super(AdveraryGenerator, self).__init__()
         self.e_lim = e_lim
+        self.nz = nz
         self.main = nn.Sequential(
         nn.ConvTranspose2d( in_channels=nz,out_channels= 1024, kernel_size=4, stride=1, padding=0, bias=False),
         nn.BatchNorm2d(1024),
