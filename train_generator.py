@@ -1,5 +1,6 @@
 import time,gc
 import torch,torchvision
+import torch.nn as nn
 from torchvision import transforms
 
 from nag.model import model_dict,AdveraryGenerator
@@ -15,30 +16,47 @@ lr = 1e-3
 # transforms
 size=224
 # Imagenet Stats
-vgg_mean = [103.939, 116.779, 123.68]
+vgg_mean = [0.485, 0.456, 0.406]
 
-preprocess=transforms.Compose([transforms.Resize((size,size)),
-                               transforms.ToTensor(),
-                               transforms.Normalize(vgg_mean,(0.5, 0.5, 0.5))])
+preprocess=transforms.Compose([
+    transforms.Resize((size,size)),
+    transforms.ToTensor(),
+])
 
 
 # Hyperparameters : NAG: Generator
 ngf=128
 nz= latent_dim=10
-e_lim = 10
+e_lim = 10/255
 nc=3 # Number of Channels
 
+class Normalize(nn.Module):
 
+    def __init__(self, mean, std):
+        super(Normalize, self).__init__()
+        self.mean = mean
+        self.std = std
+
+    def forward(self, input):
+        size = input.size()
+        x = input.clone()
+        for i in range(size[1]):
+            x[:, i] = (x[:, i] - self.mean[i]) / self.std[i]
+
+        return x
 
 
 if __name__ == "__main__":
-    device = get_device()
+    device = 'cuda:0'
     print("Using Pytorch Version : {} and Torchvision Version : {}. Using Device {}".format(torch.__version__,torchvision.__version__,device))
 
     # Setting up the Target Model 
-    arch='resnet50'
+    arch='vgg19'
     print(f"Training Generator for Arch {arch}")
-    model= model_dict[arch](pretrained=True)
+    model= nn.Sequential(
+        Normalize(vgg_mean,[0.229, 0.224, 0.225]),
+        model_dict[arch](pretrained=True),
+    )
     
     # Setting up the NAG : Generator
     G_adversary=AdveraryGenerator(nz,e_lim).to(device)
@@ -46,10 +64,12 @@ if __name__ == "__main__":
 
     
     # Setting up Dataloaders
-    dataset_path=r'ILSVRC'
-    data_train=ImageFolder(root='ILSVRC/train',transform=preprocess)
+    dataset_path=r'/home/DiskA/Dataset/ILSVRC2012_img_val_new'
+    data_train=ImageFolder(root=dataset_path+'/train',transform=preprocess)
+    # data_train.samples = data_train.samples[:10]
     class2idx=data_train.class_to_idx
-    data_valid=CustomDataset(subset='valid',root_dir=dataset_path,transform=preprocess)
+    # data_valid=CustomDataset(subset='valid',root_dir=dataset_path,transform=preprocess)
+    data_valid=ImageFolder(root=dataset_path+'/val',transform=preprocess)
     train_num = len(data_train)
     val_num = len(data_valid)
     
