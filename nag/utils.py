@@ -2,6 +2,7 @@ import torch
 import torch.nn.functional as F
 import os
 from PIL import Image
+import random,string
 import numpy as np
 import warnings
 try:
@@ -29,7 +30,7 @@ def get_bs(arch):
 #         print(f"Current GPU MAX Size : {GPU_MAX_MEM}. {BS_DIV}")
 
         if arch  not in ['resnet50','resnet152']:#  ['vgg16','vgg19','vgg-f','googlenet']:
-            bs=int(32)
+            bs=int(16)
         elif arch in ['resnet50','resnet152']:
             bs=int(16)
         else:
@@ -39,27 +40,6 @@ def get_bs(arch):
     return bs
 
 #get_bs(arch)
-
-
-def save_checkpoint(model, to_save, filename='checkpoint.pth'):
-    """Save checkpoint if a new best is achieved"""
-    if to_save:
-        print ("=> Saving a new best")
-        torch.save(model.state_dict(), filename)  # save checkpoint
-    else:
-        print ("=> Validation Accuracy did not improve")
-        
-def save_perturbations(noise,arch,epoch,wabdb_flag=False):
-    rand_str= ''.join( random.choice(string.ascii_letters) for i in range(6))
-    os.makedirs(f"{arch}-{rand_str}",exist_ok=True)
-    perturbations=noise.permute(0,2,3,1).cpu().detach().numpy()*255
-    np.save(f'{arch}-{rand_str}/Perturbations_{arch}_{epoch}.npy', perturbations)
-    for perturb_idx,perturbation in enumerate(perturbations[:,]):
-        
-        im = Image.fromarray(perturbation.astype(np.uint8))
-        if wabdb_flag:
-            wandb.log({"noise": [wandb.Image(im, caption=f"Noise_{arch}_{epoch}_{perturb_idx}")]})
-        im.save(f'{arch}-{rand_str}/Perturbations_{arch}_{epoch}_{perturb_idx}.png')        
 
 # TODO 
 def visualize_perturbations():
